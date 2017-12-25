@@ -314,7 +314,7 @@ class Question:
             if self.soup == None:
                 self.parser()
             soup = self.soup
-            title = soup.find("h2", class_="zm-item-title").string.encode("utf-8").replace("\n", "")
+            title = soup.find("h1", class_="QuestionHeader-title").text.encode("utf-8").replace("\n", "")
             self.title = title
             if platform.system() == 'Windows':
                 title = title.decode('utf-8').encode('gbk')
@@ -326,7 +326,7 @@ class Question:
         if self.soup == None:
             self.parser()
         soup = self.soup
-        detail = soup.find("div", id="zh-question-detail").div.get_text().encode("utf-8")
+        detail = soup.find("div", class_="QuestionHeader-detail").text.encode("utf-8")
         if platform.system() == 'Windows':
             detail = detail.decode('utf-8').encode('gbk')
             return detail
