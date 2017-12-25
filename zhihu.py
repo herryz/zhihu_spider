@@ -338,25 +338,25 @@ class Question:
             self.parser()
         soup = self.soup
         answers_num = 0
-        if soup.find("h3", id="zh-question-answer-num") != None:
-            answers_num = int(soup.find("h3", id="zh-question-answer-num")["data-num"])
+        if soup.find("h4", class_="List-headerText") != None:
+            answers_num = int(soup.find("h4", class_="List-headerText").text.split()[0].replace(",", ""))
         return answers_num
 
     def get_followers_num(self):
         if self.soup == None:
             self.parser()
         soup = self.soup
-        followers_num = int(soup.find("div", class_="zg-gray-normal").a.strong.string)
+        followers_num = int(soup.find("div", class_="NumberBoard-value").text.encode("utf-8"))
         return followers_num
 
     def get_topics(self):
         if self.soup == None:
             self.parser()
         soup = self.soup
-        topic_list = soup.find_all("a", class_="zm-item-tag")
+        topic_list = soup.find_all("a", class_="TopicLink")
         topics = []
         for i in topic_list:
-            topic = i.contents[0].encode("utf-8").replace("\n", "")
+            topic = i.text.encode("utf-8").replace("\n", "")
             if platform.system() == 'Windows':
                 topic = topic.decode('utf-8').encode('gbk')
             topics.append(topic)
@@ -378,6 +378,7 @@ class Question:
                             self.parser()
                         soup = BeautifulSoup(self.soup.encode("utf-8"), "lxml")
 
+                        # soup.find("div", class_="RichContent-inner").text
                         is_my_answer = False
                         if soup.find_all("div", class_="zm-item-answer")[j].find("span", class_="count") == None:
                             my_answer_count += 1
@@ -511,7 +512,7 @@ class Question:
         if self.soup == None:
             self.parser()
         soup = self.soup
-        return int(soup.find("meta", itemprop="visitsCount")["content"])
+        return int(soup.find("div", class_="NumberBoard-value").text)
 
 
 class User:
